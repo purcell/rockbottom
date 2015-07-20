@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+def is(x,y,s)
+$rs[y][x]==s
+end
+def pump
+$posns.reverse.each{|x,y|
+if is(x,y,"~")
+if is(x,y+1," ")
+set(x,y+1,"~")
+set(x,y," ")
+elsif is(x+1,y," ")&&!is(x,y+1," ")
+set(x+1,y,"~")
+set(x,y," ")
+end
+end}
+set(*IN,"~")
+end
+def wtr
+$posns.select{|x,y|is(x,y,"~")}
+end
+def set(x,y,s)
+$rs[y][x]=s
+end
+max=ARGF.readline.to_i
+ARGF.readline
+$rs=ARGF.read.split("\n").map(&:strip).map(&:chars)
+$xs=(0...$rs[0].size).to_a
+$ys=(0...$rs.size).to_a
+$posns=$ys.each.with_object([]){|y,cs|$xs.map{|x|cs<<[x,y]}}
+IN=wtr[-1]
+while wtr.size<max; pump end
+puts $xs.map{|x|on=$ys.reverse.map{|y|$rs[y][x]}.drop_while{|s|s=='#'};w=on.select{|s|s=="~"};on[0]==" "&&w.any? ? "~": w.size}.map(&:to_s).join(" ")
