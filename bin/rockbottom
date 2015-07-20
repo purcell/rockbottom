@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/cave"
+require 'stringio'
+
+input = StringIO.new(ARGF.read)
+
+water_units = input.readline.to_i
+input.readline
+
+cave = Cave.parse(input.read)
+
+while cave.water_units < water_units
+  cave.pump
+end
+
+puts cave.depths.map(&:to_s).join(" ")
