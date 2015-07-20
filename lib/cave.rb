@@ -45,7 +45,7 @@ class Cave
   end
 
   def depths
-    0.upto(@rows.first.size - 1).map do |x|
+    column_offsets.map do |x|
       squares = squares_from_bottom_at_column(x)
       above_rock = squares.drop_while { |s| s == :rock }
       water_above = above_rock.select { |s| s == :water }
@@ -59,9 +59,16 @@ class Cave
 
   private
 
+  def column_offsets
+    (0...@rows.first.size).to_a
+  end
+
+  def row_offsets
+    (0...@rows.size).to_a
+  end
+
   def squares_from_bottom_at_column(x)
-    max_y = @rows.size - 1
-    max_y.downto(0).map { |y| at(x, y) }
+    row_offsets.reverse.map { |y| at(x, y) }
   end
 
   def flow_at(x, y)
@@ -81,8 +88,8 @@ class Cave
 
   def positions_from_bottom_right
     Enumerator.new do |enum|
-      (@rows.size - 1).downto(0).each do |y|
-        (@rows[y].size - 1).downto(0).each do |x|
+      row_offsets.reverse.each do |y|
+        column_offsets.reverse.each do |x|
           enum << [x, y]
         end
       end
