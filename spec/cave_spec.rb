@@ -15,11 +15,10 @@ RSpec.describe Cave do
       cave.pump
     end
     expect(cave.to_s).to eql(clean_up_picture(resulting_cave_picture))
-    cave
   end
 
   it "flows horizontally when over rock" do
-    cave = expect_pump_result(<<-end_before, <<-end_after)
+    expect_pump_result(<<-end_before, <<-end_after)
       ################################
       ~                              #
       #         ####                 #
@@ -38,7 +37,6 @@ RSpec.describe Cave do
       #######   ###########     ######
       ################################
     end_after
-    expect(cave.water_units).to eq(2)
   end
 
   it "flows vertically first when air is below" do
