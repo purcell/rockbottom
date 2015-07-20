@@ -4,6 +4,9 @@ class Cave
   def initialize(rows)
     @rows = rows
     water_positions = positions_from_bottom_right.select { |x, y| at(x, y) == :water }
+    if @rows.map(&:size).uniq.size > 1
+      raise "rows are unequal sizes"
+    end
     @water_units = water_positions.size
     @entry_point = water_positions.last
   end
@@ -41,7 +44,25 @@ class Cave
     end.join("\n") + "\n"
   end
 
+  def depths
+    0.upto(@rows.first.size - 1).map do |x|
+      squares = squares_from_bottom_at_column(x)
+      above_rock = squares.drop_while { |s| s == :rock }
+      water_above = above_rock.select { |s| s == :water }
+      if above_rock.first == :air && water_above.any?
+        "~"
+      else
+        water_above.size
+      end
+    end
+  end
+
   private
+
+  def squares_from_bottom_at_column(x)
+    max_y = @rows.size - 1
+    max_y.downto(0).map { |y| at(x, y) }
+  end
 
   def flow_at(x, y)
     return unless at(x, y) == :water
