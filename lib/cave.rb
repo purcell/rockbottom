@@ -60,12 +60,13 @@ class Cave
 
   def positions_from_bottom_right
     Enumerator.new do |enum|
-      (@rows.first.size - 1).downto(0).each do |x|
-        (@rows.size - 1).downto(0).each do |y|
+      (@rows.size - 1).downto(0).each do |y|
+        (@rows[y].size - 1).downto(0).each do |x|
           enum << [x, y]
         end
       end
     end
   end
 end
+
 
